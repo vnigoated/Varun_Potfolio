@@ -168,7 +168,7 @@ Answer questions about Varun professionally and helpfully. If asked about someth
     // Check if API key is available
     const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;
     
-    if (!apiKey || apiKey === 'AIzaSyCNNLh3andRx15WFc3CvrpGob83IdwiZyY') {
+    if (!apiKey || apiKey === '') {
       // Use fallback response when API key is not configured
       setTimeout(() => {
         const fallbackResponse = getFallbackResponse(userInput);
