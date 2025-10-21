@@ -231,7 +231,7 @@ Answer questions about Varun professionally and helpfully. If asked about someth
       const fallbackResponse = getFallbackResponse(userInput);
       const assistantMessage: Message = {
         role: 'assistant',
-        content: `${fallbackResponse}\n\n(Note: AI service is currently unavailable, but I can still help with basic questions about Varun!)`,
+        content: fallbackResponse,
         timestamp: new Date()
       };
       setMessages((prev) => [...prev, assistantMessage]);
