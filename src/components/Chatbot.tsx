@@ -165,64 +165,31 @@ Answer questions about Varun professionally and helpfully. If asked about someth
     setInput('');
     setIsLoading(true);
 
-    // Check if API key is available
-    const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;
-    
-    if (!apiKey || apiKey === '') {
-      // Use fallback response when API key is not configured
-      setTimeout(() => {
-        const fallbackResponse = getFallbackResponse(userInput);
-        const assistantMessage: Message = {
-          role: 'assistant',
-          content: fallbackResponse,
-          timestamp: new Date()
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-        setIsLoading(false);
-      }, 1000); // Simulate API delay
-      return;
-    }
-
     try {
       // Build context-aware conversation
       const conversationContext = buildConversationContext(userInput);
-      
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: conversationContext,
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 1000,
-              topP: 0.8,
-              topK: 40,
-            },
-            safetySettings: [
-              {
-                category: "HARM_CATEGORY_HARASSMENT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-              },
-              {
-                category: "HARM_CATEGORY_HATE_SPEECH",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-              },
-              {
-                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-              },
-              {
-                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-              }
-            ]
-          }),
-        }
-      );
+
+      const body = {
+        contents: conversationContext,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1000,
+          topP: 0.8,
+          topK: 40,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        ],
+      };
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -230,12 +197,13 @@ Answer questions about Varun professionally and helpfully. If asked about someth
       }
 
       const data = await response.json();
-      
-      if (!data.candidates || data.candidates.length === 0) {
-        throw new Error('No response generated from API');
-      }
 
-      const aiResponse = data.candidates[0]?.content?.parts?.[0]?.text || getFallbackResponse(userInput);
+      // Google Generative API may return candidates similar to previous shape
+      const aiResponse =
+        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        data?.candidates?.[0]?.content?.text ||
+        data?.candidates?.[0]?.output ||
+        getFallbackResponse(userInput);
       
       // Update conversation history
       const newConversationHistory = [

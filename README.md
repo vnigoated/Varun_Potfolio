@@ -27,6 +27,17 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
    - If no API key is provided, the chatbot will use intelligent fallback responses
    - The chatbot maintains conversation context and memory for better interactions
 
+## Server-side API key (Chatbot)
+
+The chatbot calls a serverless endpoint (`/api/generate`) which uses a server-side environment variable to authenticate with Google's Generative API. Locally, add a `.env` file with:
+
+```
+VITE_GOOGLE_AI_API_KEY=your_key_here
+# OR set GOOGLE_AI_API_KEY for server-hosted environments
+```
+
+When deploying (Vercel/Netlify), set `GOOGLE_AI_API_KEY` in the project settings to keep the key private.
+
 3. **Run Development Server**
    ```bash
    npm run dev
