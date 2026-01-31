@@ -1,103 +1,84 @@
-import { useEffect, useRef, useState } from 'react';
 import { Code, Wrench, Brain, Cloud } from 'lucide-react';
+import GlassCard from './UI/GlassCard';
+import { motion } from 'framer-motion';
 
 export default function Skills() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
   const skillCategories = [
     {
-      title: 'Languages & Technologies',
+      title: 'Languages & Databases',
       icon: Code,
-      skills: ['C', 'Java', 'Python', 'SQL', 'JavaScript', 'TypeScript'],
-      color: 'from-blue-500 to-blue-600',
+      skills: ['Python', 'C', 'JavaScript', 'TypeScript', 'SQL', 'PostgreSQL', 'MongoDB', 'Redis', 'FAISS', 'Pinecone'],
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10 border-blue-500/20',
     },
     {
-      title: 'Frameworks & Tools',
+      title: 'Frameworks',
       icon: Wrench,
-      skills: ['React.js', 'Node.js', 'Express.js', 'Tailwind CSS', 'MongoDB', 'BigQuery', 'FastAPI', 'Flask'],
-      color: 'from-teal-500 to-teal-600',
+      skills: ['React', 'Next.js', 'Node.js', 'Express', 'Flask', 'FastAPI', 'TailwindCSS'],
+      color: 'text-teal-400',
+      bg: 'bg-teal-500/10 border-teal-500/20',
     },
     {
-      title: 'AI/ML & Platforms',
+      title: 'AI/ML & Specializations',
       icon: Brain,
-      skills: ['TensorFlow', 'Scikit-Learn', 'Pandas', 'Keras', 'OpenCV', 'Streamlit', 'Hugging Face', 'Ollama', 'Gemini'],
-      color: 'from-slate-600 to-slate-700',
+      skills: ['PyTorch', 'Scikit-learn', 'Transformers', 'OpenCV', 'LangChain', 'LangGraph', 'LlamaIndex', 'NLP', 'RAG', 'Agentic AI'],
+      color: 'text-violet-400',
+      bg: 'bg-violet-500/10 border-violet-500/20',
     },
     {
-      title: 'Developer Tools & Cloud',
+      title: 'Tools, DevOps & Security',
       icon: Cloud,
-      skills: ['Git', 'OWASP ZAP', 'BurpSuite', 'Docker', 'VS Code', 'Cursor', 'Postman', 'ONNX', 'Anaconda', 'Vercel'],
-      color: 'from-slate-500 to-slate-600',
+      skills: ['Git', 'Docker', 'AWS', 'GCP', 'Vercel', 'MLflow', 'BentoML', 'Langflow', 'Ollama', 'OWASP ZAP', 'BurpSuite'],
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-500/10 border-cyan-500/20',
     },
   ];
 
   return (
-    <section id="skills" ref={sectionRef} className="py-20 bg-white dark:bg-dark-800 transition-colors duration-300">
+    <section id="skills" className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className={`transition-all duration-1000 transform ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
         >
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">Technical Skills</h2>
-          <div className="h-1 w-20 bg-slate-900 dark:bg-slate-200 rounded-full mb-12" />
+          <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
+            <Brain className="text-violet-400" />
+            Technical Arsenal
+          </h2>
+          <div className="h-1 w-20 bg-gradient-to-r from-violet-400 to-blue-500 rounded-full" />
+        </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {skillCategories.map((category, index) => {
-              const Icon = category.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-dark-700 dark:to-dark-600 rounded-xl shadow-lg hover:shadow-2xl dark:shadow-dark-900/20 transition-all duration-300 transform hover:-translate-y-1 border border-slate-200 dark:border-dark-600 overflow-hidden group"
-                  style={{
-                    transitionDelay: `${index * 100}ms`,
-                  }}
-                >
-                  <div className={`h-2 bg-gradient-to-r ${category.color}`} />
-                  <div className="p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`p-3 bg-gradient-to-r ${category.color} rounded-lg shadow-md`}>
-                        <Icon className="text-white" size={24} />
-                      </div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">{category.title}</h3>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {category.skills.map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1.5 bg-white dark:bg-dark-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-dark-600 hover:border-slate-300"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {skillCategories.map((category, index) => {
+            const Icon = category.icon;
+            return (
+              <GlassCard
+                key={index}
+                delay={index * 0.1}
+                className="group hover:border-white/20"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`p-3 rounded-lg ${category.bg} ${category.color}`}>
+                    <Icon size={24} />
                   </div>
+                  <h3 className="text-xl font-bold text-white">{category.title}</h3>
                 </div>
-              );
-            })}
-          </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1.5 bg-white/5 text-slate-300 rounded-lg text-sm font-medium border border-white/5 hover:bg-white/10 hover:border-white/10 transition-colors cursor-default"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </GlassCard>
+            );
+          })}
         </div>
       </div>
     </section>

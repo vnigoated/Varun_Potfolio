@@ -1,29 +1,31 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
+// Removed GeminiMessage interface
 interface Message {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system'; // Added system role
   content: string;
   timestamp?: Date;
 }
 
-interface GeminiMessage {
-  role: 'user' | 'model';
-  parts: { text: string }[];
+interface ChatbotProps {
+  embedded?: boolean;
 }
 
-export default function Chatbot() {
+export default function Chatbot({ embedded = false }: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hi! I'm Varun's AI assistant. Ask me anything about his experience, skills, projects, or how to get in touch!",
+      content: "SYSTEM_ONLINE: I am Varun's AI assistant. Accessing neural archives... How can I assist you with his portfolio today?",
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<GeminiMessage[]>([]);
+  // const [conversationHistory, setConversationHistory] = useState([]); // Removed Gemini history
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -37,187 +39,193 @@ export default function Chatbot() {
   const portfolioContext = `
 You are an AI assistant for Varun Inamdar's portfolio website. Here is information about Varun:
 
-EDUCATION:
-- B.Tech in Artificial Intelligence at Vishwakarma University (CGPA 8.7)
-- Honors - Cybersecurity at Vishwakarma University  (CGPA 9.0)
-
-EXPERIENCE:
-1. AI Engineer at Drone Project Internship, Southern Command (June 2024 – Dec 2024)
-   - Designed payload drone system with high-load capacity and intelligent navigation
-   - Implemented object detection, avoidance, and path tracking module
-
-2. Security Analyst - Web Application VA at Beeman (Aug 2025 – Sept 2025)
-   - Performed BurpSuite and OWASP ZAP assessment; found unencrypted forms and missing security headers
-   - Documented findings per OWASP Top 10 with reproduction steps and mitigations
-   - Conducted comprehensive vulnerability assessment and penetration testing (VAPT) on web applications
-   - Identified and reported critical security vulnerabilities including SQL injection and XSS flaws
-
-3. Security Analyst - Web Application VA at Nimka (April 2025)
-   - Performed BurpSuite and OWASP ZAP assessment
-   - Documented findings per OWASP Top 10 with reproduction steps and mitigations
-
-TECHNICAL SKILLS:
-- Languages: C, Java, Python, SQL, JavaScript, TypeScript
-- Frameworks: React.js, Node.js, Express.js, Tailwind CSS, MongoDB, BigQuery, FastAPI, Flask
-- AI/ML: TensorFlow, Scikit-Learn, Pandas, Keras, OpenCV, Streamlit, Hugging Face, Ollama, Gemini
-- Tools: Git, OWASP ZAP, BurpSuite, Docker, VS Code, Cursor, Postman, ONNX, Anaconda, Vercel
-
-PROJECTS:
-1. Tender Summarizer - NLP pipeline for automated tender document summarization
-2. Cybersecurity AI Tutor and Evaluator - Interactive learning platform with adaptive MCQs
-3. CNN-based Diabetic Retinopathy Detection - Deep learning model with XAI using Grad-CAM
-
-RESEARCH & PUBLICATIONS:
-1. DocSum — PDF summarizer
-  - DocSum efficiently extracts key information from PDFs, preserves semantics, and provides targeted, concise summaries via a simple UI to speed document understanding.
-
-2. Explainable DR Detection — Grad-CAM + LLM
-  - A deep-learning system for automated diabetic retinopathy detection from fundus images that integrates Grad-CAM and LLM-driven explanations to improve clinician trust while delivering strong accuracy and localization.
-
-ACHIEVEMENTS:
-- 3× Hackathon Winner (WILO and IBM)
-- IBM Hackathon Winner (First place)
-- IBM Business Intelligence Foundations with SQL, ETL & Data Warehousing
-- Google Data Analytics Certificate
-
 CONTACT:
 - Email: vninamdar03@gmail.com
-- Phone: +91 7517277551
-- LinkedIn: linkedin.com/in/varun-inamdar03/
+- Phone: (+91) 7517277551
+- LinkedIn: linkedin.com/in/varun-inamdar
 - GitHub: github.com/vnigoated
+- Portfolio: portfolio/varuninamdar
 
-Answer questions about Varun professionally and helpfully. If asked about something not in this context, politely say you don't have that information. Keep responses concise and relevant.
+EDUCATION:
+- Vishwakarma University Pune, Maharashtra
+  B.Tech in Artificial Intelligence — CGPA: 8.7/10 (Aug 2023 – May 2027)
+- Vishwakarma University Pune, Maharashtra
+  Honors in Cybersecurity — CGPA: 9.0/10 (Aug 2024 – May 2027)
+
+EXPERIENCE:
+1. AI Engineer Intern (Jun 2024 – Dec 2024)
+   Payload Drone Project — Vishwakarma University Pune, Maharashtra
+   – Designed a high-payload drone system with intelligent autonomous navigation for Southern Command, increasing flight stability by 22%.
+   – Built a GPS-independent visual SLAM pipeline integrating YOLOv5 object detection and MiDaS depth estimation, achieving 92% localization accuracy in indoor environments.
+   – Applied model quantization techniques to reduce inference latency by 40%, enhancing real-time decision-making on edge devices.
+
+2. Security Analyst — Web Application VAPT (Apr 2025 – Sep 2025)
+   Beeman & Nimka Pune, Maharashtra
+   – Performed vulnerability assessments using BurpSuite and OWASP ZAP across 10+ web applications, identifying 15+ high-risk vulnerabilities.
+   – Discovered unencrypted form data, missing security headers, and SQL injection flaws, reducing critical exposure by 35% post-mitigation.
+   – Authored detailed VAPT reports aligned with OWASP Top 10 standards, including proof-of-concept exploits and remediation guidelines.
+   – Collaborated with developers to implement security hardening measures, improving application security scores by 28%.
+
+3. Software Developer Intern (Oct 2025 – Nov 2025)
+   Bootcoding Pvt. Ltd. — Remote
+   – Contributed to real-world product engineering in a structured corporate tech environment.
+   – Developed and deployed production-grade features using React.js, Node.js, FastAPI, and cloud infrastructure.
+   – Applied model quantization to reduce LLM inference latency by 38% and memory footprint by 60% on edge deployments.
+   – Gained hands-on experience in agile workflows, code reviews, and CI/CD pipelines, enhancing software delivery efficiency.
+   – Collaborated with cross-functional teams to design scalable solutions, improving system performance and user experience.
+
+TECHNICAL SKILLS:
+- Languages: Python, C, JavaScript, TypeScript, SQL
+- Frameworks: React, Next, Node, Express, Flask, FastAPI, TailwindCSS
+- AI/ML Stack: PyTorch, Scikit-learn, Pydantic, spaCy, Transformers, OpenCV, LangChain, LangGraph, LlamaIndex
+- Databases: PostgreSQL, MongoDB, Redis, FAISS, Pinecone
+- Specializations: Natural Language Processing, RAG, Agentic AI
+- DevOps & Tools: Git, Docker, AWS, GCP, Vercel, MLflow, BentoML, Langflow, Ollama
+- Cybersecurity: OWASP ZAP, BurpSuite, VAPT
+
+PROJECTS:
+1. Skoda AI/ML Based Building & Energy Management System | FastAPI, PyTorch Transformer
+   – Developing an intelligent BMS/EMS solution for Skoda manufacturing facilities integrating chiller, boiler, and HVAC optimization using predictive machine learning models.
+   – Implemented time-series forecasting models for energy consumption prediction, achieving 87% accuracy and reducing energy waste by 18%.
+   – Built predictive failure detection system using anomaly detection algorithms, identifying equipment faults 48 hours in advance with 91% precision.
+   – Designed centralized failure management dashboard with automated alert mechanisms, reducing maintenance downtime by 25%.
+
+2. Digital and Intelligence Diet Plan RAG Agent | Watsonx AI, Granite 8b-instruct, FAISS, LangFlow, Node.js, React
+   – Developed a Retrieval-Augmented Generation system for personalized nutrition guidance using Watsonx Studio for model orchestration and deployment.
+   – Leveraged Granite models for both embedding generation and LLM-based response synthesis, ensuring domain-specific accuracy and efficiency.
+   – Integrated FAISS vector store for scalable semantic retrieval across 10K+ nutritional records, enabling context-aware and adaptive meal recommendations.
+
+3. Career Connect | FastAPI, Next.js, LangChain, Supabase, Docker, Vercel (January 2025)
+   – Developed a cybersecurity learning platform with personalized learning paths, adaptive assessments, AI proctoring, and virtual labs.
+   – Created and embedded course materials into Supabase pgvector to provide explanations and curriculum guidance through a LangChain-driven RAG chatbot.
+   – Integrated LangChain with Google Gemini to deliver intelligent question answering and confidence-based MCQ scoring with automated integrity logs.
+   – Implemented Supabase for course storage and containerized the entire stack with Docker for consistent development and deployment.
+
+4. CNN-based Diabetic Retinopathy Detection with Explainable AI | PyTorch, Grad-CAM, Flask, Hugging Face
+   – Developed a CNN model achieving 91% accuracy for diabetic retinopathy classification using retinal fundus images.
+   – Applied Grad-CAM for visual interpretability, improving clinician trust and model transparency.
+   – Deployed with Flask API and integrated LLM-generated natural language diagnostic reports.
+
+PUBLICATIONS:
+1. AICCT 2025 (Accepted): Explainable AI in Diabetic Retinopathy Diagnosis: CNN-Based Detection with Gradient-Weighted Class Activation Mapping
+2. SPRINGER NATURE 2025 (Accepted): Document Summarizer: A Machine Learning Approach to PDF Summarization
+
+ACHIEVEMENTS:
+- 1st Place — IBM Hackathon: Secured 1st place for developing a multi-agent AI solution using Watsonx and Cloud (presented at IBM Summit, Delhi).
+- IBM Business Intelligence Specialization (SQL, ETL, Data Warehousing) — Coursera Certificate
+- Google Data Analytics Certificate
+- 3× Hackathon Winner: Recognized in innovation events hosted by Binghamton University and WILO for AI-driven automation solutions.
+- 1st Place — Codeathon 2025: Won against 20+ teams for a multimodal healthcare prediction platform using ML and LLMs.
+- Open Source Contributor: Contributed to 10+ GitHub repositories involving machine learning frameworks and educational AI tools.
+- Deployed AI Monitoring system at Shri Mahalaxmi Mandir, Pune during Navratri, counting 200,000+ people and boosting crowd management.
 `;
 
   const getFallbackResponse = (userInput: string): string => {
     const input = userInput.toLowerCase().trim();
-    
+
     // Handle greetings
-    if (input.includes('hi') || input.includes('hello') || input.includes('hey')) {
-      return "Hello! I'm Varun's AI assistant. I can tell you about his experience, skills, projects, and achievements. What would you like to know?";
+    if (/\b(hi|hello|hey)\b/.test(input)) {
+      return "Greetings. Neural link established. I can provide analysis on Varun's experience, skills, projects, and achievements. Please state your query.";
     }
-    
+
     // Handle questions about experience
     if (input.includes('experience') || input.includes('work') || input.includes('job')) {
-      return "Varun has experience as an AI Engineer at Drone Project Internship (Southern Command) and as a Security Analyst at Nimka. He's worked on drone systems, object detection, and web application security assessments.";
+      return "Accessing Experience Module... Varun has served as an AI Engineer at Southern Command (Drone Project) and as a Security Analyst at Nimka & Beeman. He specializes in autonomous systems and web security protocols.";
     }
-    
+
     // Handle questions about skills
     if (input.includes('skill') || input.includes('technology') || input.includes('tech')) {
-      return "Varun's technical skills include Python, Java, JavaScript, TypeScript, React.js, Node.js, TensorFlow, OpenCV, and many more. He's also experienced with AI/ML frameworks and cybersecurity tools.";
+      return "Scanning Technical Capabilities... Varun is proficient in Python, Java, JavaScript, TypeScript, React.js, Node.js, TensorFlow, and OpenCV. He possesses dual specialization in AI/ML architectures and Cybersecurity tools.";
     }
-    
+
     // Handle questions about projects
     if (input.includes('project') || input.includes('work')) {
-      return "Varun has worked on several projects including a Tender Summarizer (NLP), Cybersecurity AI Tutor, and CNN-based Diabetic Retinopathy Detection. Would you like to know more about any specific project?";
+      return "Retrieving Project Data... Notable projects include a Tender Summarizer (NLP), Cybersecurity AI Tutor, and CNN-based Diabetic Retinopathy Detection. Which specific project requires detailed analysis?";
     }
-    
+
     // Handle questions about contact
     if (input.includes('contact') || input.includes('email') || input.includes('phone') || input.includes('reach')) {
-      return "You can contact Varun at vninamdar03@gmail.com or +91 7517277551. You can also find him on LinkedIn (linkedin.com/in/varun-inamdar03/) and GitHub (github.com/vnigoated).";
+      return "Communication Protocols: \nEmail: vninamdar03@gmail.com \nPhone: +91 7517277551 \nLinkedIn: linkedin.com/in/varun-inamdar03/ \nGitHub: github.com/vnigoated";
     }
-    
+
     // Handle questions about education
     if (input.includes('education') || input.includes('degree') || input.includes('university') || input.includes('college')) {
-      return "Varun is pursuing a B.Tech in Artificial Intelligence at Vishwakarma University with a CGPA of 8.7. He also has Honors with a CGPA of 9.0.";
+      return "Education Records: \nB.Tech in Artificial Intelligence at Vishwakarma University (CGPA 8.7) \nHonors in Cybersecurity (CGPA 9.0).";
     }
-    
+
     // Default response
-    return "I'd be happy to help! I can tell you about Varun's experience, skills, projects, education, or how to contact him. What would you like to know?";
+    return "Query not recognized in local cache. I can detail Varun's experience, skills, projects, or contact protocols. Please refine your request.";
   };
 
-  const buildConversationContext = (userInput: string): GeminiMessage[] => {
-    // Build conversation history for context
-    const contextMessages: GeminiMessage[] = [
-      {
-        role: 'user',
-        parts: [{ text: portfolioContext }]
-      },
-      {
-        role: 'model',
-        parts: [{ text: "I understand. I'm Varun's AI assistant and I have all the information about his background, experience, skills, projects, and contact details. I'm ready to help answer any questions about him professionally and accurately." }]
-      }
-    ];
+  // Groq / OpenAI-compatible Message Interface
+  const buildConversationContext = (userInput: string): Message[] => {
+    // Build system message with context
+    const systemMessage: Message = {
+      role: 'system',
+      content: portfolioContext + "\n\nCRITICAL INSTRUCTION: You are strictly an assistant for Varun Inamdar's portfolio. You MUST ONLY answer questions related to Varun, his skills, experience, projects, and contact info. If a user asks about general topics (like 'what is the capital of France', 'write a poem', 'coding help unrelated to Varun'), you MUST politely refuse and steer the conversation back to Varun's portfolio. Do not hallucinate information."
+    };
 
-    // Add recent conversation history (last 10 messages to maintain context)
-    const recentHistory = conversationHistory.slice(-10);
-    contextMessages.push(...recentHistory);
+    // Add recent conversation history (last 10 messages)
+    // Map strictly as 'user' or 'assistant'
+    const recentHistory = messages.slice(1).slice(-10).map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'assistant',
+      content: msg.content
+    } as Message));
 
-    // Add current user input
-    contextMessages.push({
+    // Current user input
+    const currentMessage: Message = {
       role: 'user',
-      parts: [{ text: userInput }]
-    });
+      content: userInput
+    };
 
-    return contextMessages;
+    return [systemMessage, ...recentHistory, currentMessage];
   };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { 
-      role: 'user', 
+    const userMessage: Message = {
+      role: 'user',
       content: input,
       timestamp: new Date()
     };
+
+    // Optimistic update
     setMessages((prev) => [...prev, userMessage]);
     const userInput = input;
     setInput('');
     setIsLoading(true);
 
     try {
-      // Build context-aware conversation
-      const conversationContext = buildConversationContext(userInput);
+      const messagesPayload = buildConversationContext(userInput);
+      const apiKey = import.meta.env.VITE_GROQ_API;
 
-      const body = {
-        contents: conversationContext,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1000,
-          topP: 0.8,
-          topK: 40,
-        },
-        safetySettings: [
-          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-        ],
-      };
+      if (!apiKey) {
+        throw new Error("GROQ API Key not found in environment.");
+      }
 
-      const response = await fetch('/api/generate', {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "llama3-70b-8192", // High performance model
+          messages: messagesPayload.map(m => ({ role: m.role, content: m.content })),
+          temperature: 0.7,
+          max_tokens: 1000,
+          stream: false
+        })
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(`API request failed with status: ${response.status}. ${errorData.error?.message || ''}`);
+        throw new Error(`Groq API error: ${response.status} - ${JSON.stringify(errorData)}`);
       }
 
       const data = await response.json();
-
-      // Google Generative API may return candidates similar to previous shape
-      const aiResponse =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        data?.candidates?.[0]?.content?.text ||
-        data?.candidates?.[0]?.output ||
-        getFallbackResponse(userInput);
-      
-      // Update conversation history
-      const newConversationHistory = [
-        ...conversationHistory,
-        {
-          role: 'user' as const,
-          parts: [{ text: userInput }]
-        },
-        {
-          role: 'model' as const,
-          parts: [{ text: aiResponse }]
-        }
-      ];
-      setConversationHistory(newConversationHistory);
+      const aiResponse = data.choices?.[0]?.message?.content || getFallbackResponse(userInput);
 
       const assistantMessage: Message = {
         role: 'assistant',
@@ -251,116 +259,173 @@ Answer questions about Varun professionally and helpfully. If asked about someth
     setMessages([
       {
         role: 'assistant',
-        content: "Hi! I'm Varun's AI assistant. Ask me anything about his experience, skills, projects, or how to get in touch!",
+        content: "SYSTEM_RESET_COMPLETE. Memory cleared. I am ready for new queries regarding Varun Inamdar.",
         timestamp: new Date(),
       },
     ]);
-    setConversationHistory([]);
   };
 
+  // Embedded Mode (IDE Terminal)
+  if (embedded) {
+    return (
+      <div className="flex flex-col h-full w-full bg-slate-950/50">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+          {messages.map((message, index) => (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              key={index}
+              className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+            >
+              <div className={`p-2 rounded-lg max-w-[85%] font-mono text-sm ${message.role === 'user'
+                ? 'bg-cyan-600/20 text-cyan-100 border border-cyan-500/30'
+                : 'bg-slate-800/50 text-slate-300 border border-white/5'
+                }`}>
+                {message.role === 'assistant' && (
+                  <span className="text-xs text-green-400 block mb-1">➜ system_response</span>
+                )}
+                {message.content}
+              </div>
+            </motion.div>
+          ))}
+          {isLoading && (
+            <div className="flex gap-2 text-slate-500 text-xs font-mono animate-pulse">
+              <span>PROCESSING_QUERY...</span>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div className="p-3 bg-slate-900 border-t border-white/10 flex items-center gap-2">
+          <span className="text-green-500">➜</span>
+          <span className="text-cyan-500">~</span>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type command..."
+            className="flex-1 bg-transparent border-none outline-none text-slate-300 font-mono text-sm placeholder:text-slate-600"
+            disabled={isLoading}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Floating Mode (Original)
   return (
     <>
-      <button
+      <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-slate-800 to-slate-900 dark:from-dark-700 dark:to-dark-600 text-white rounded-full shadow-2xl hover:from-slate-700 hover:to-slate-800 dark:hover:from-dark-600 dark:hover:to-dark-500 transition-all transform hover:scale-110 z-50"
+        className="fixed bottom-6 right-6 p-4 bg-cyan-600/20 backdrop-blur-md border border-cyan-500/50 text-cyan-400 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:bg-cyan-600/30 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] transition-all z-50 group"
       >
+        <span className="absolute inset-0 rounded-full animate-ping bg-cyan-500/20 duration-1000 -z-10"></span>
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
-      </button>
+      </motion.button>
 
-      {isOpen && (
-        <div className="fixed bottom-24 right-6 w-96 h-[600px] bg-white dark:bg-dark-800 rounded-2xl shadow-2xl dark:shadow-dark-900/20 flex flex-col z-50 border border-slate-200 dark:border-dark-700 overflow-hidden transition-colors duration-300">
-    <div className="bg-gradient-to-r from-slate-800 to-slate-900 dark:from-dark-700 dark:to-dark-600 text-white p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 dark:bg-dark-500/30 rounded-full">
-                <Bot size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold">Varun's AI Assistant</h3>
-                <p className="text-xs text-slate-200 dark:text-slate-300">Ask me anything!</p>
-              </div>
-            </div>
-            <button
-              onClick={clearConversation}
-              className="text-xs text-slate-300 dark:text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-white/10 dark:hover:bg-dark-500/30 transition-colors"
-              title="Clear conversation"
-            >
-              Clear
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-dark-900">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex gap-3 ${
-                  message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                }`}
-              >
-                <div
-                  className={`p-2 rounded-full ${
-                    message.role === 'user'
-                      ? 'bg-slate-800 dark:bg-slate-600'
-                      : 'bg-white dark:bg-dark-700 border border-slate-200 dark:border-dark-600'
-                  }`}
-                >
-                  {message.role === 'user' ? (
-                    <User size={20} className="text-white" />
-                  ) : (
-                    <Bot size={20} className="text-slate-800 dark:text-slate-100" />
-                  )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-24 right-6 w-96 h-[600px] glass border border-white/10 rounded-2xl flex flex-col z-50 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+          >
+            <div className="bg-slate-950/80 backdrop-blur-md p-4 flex items-center justify-between border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/30 relative">
+                  <div className="absolute inset-0 bg-cyan-400/20 blur opacity-50 animate-pulse"></div>
+                  <Sparkles size={20} className="text-cyan-400 relative z-10" />
                 </div>
-                <div
-                  className={`max-w-[75%] p-3 rounded-2xl ${
-                    message.role === 'user'
-                      ? 'bg-slate-800 dark:bg-slate-600 text-white rounded-tr-none'
-                      : 'bg-white dark:bg-dark-700 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-dark-600 rounded-tl-none'
-                  }`}
-                >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {message.content}
-                  </p>
+                <div>
+                  <h3 className="font-bold text-white flex items-center gap-2">
+                    Neural Assistant
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                  </h3>
+                  <p className="text-xs text-cyan-400/70 font-mono">STATUS: ACTIVE</p>
                 </div>
               </div>
-            ))}
-            {isLoading && (
-              <div className="flex gap-3">
-                <div className="p-2 rounded-full bg-white dark:bg-dark-700 border border-slate-200 dark:border-dark-600">
-                  <Bot size={20} className="text-slate-800 dark:text-slate-100" />
-                </div>
-                <div className="bg-white dark:bg-dark-700 border border-slate-200 dark:border-dark-600 p-3 rounded-2xl rounded-tl-none">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce" />
-                    <div className="w-2 h-2 bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                    <div className="w-2 h-2 bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="p-4 border-t border-slate-200 dark:border-dark-700 bg-white dark:bg-dark-800">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask me anything..."
-                className="flex-1 px-4 py-2 border border-slate-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-800 dark:focus:ring-slate-400 focus:border-transparent bg-white dark:bg-dark-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
-                disabled={isLoading}
-              />
               <button
-                onClick={handleSend}
-                disabled={isLoading || !input.trim()}
-                className="p-2 bg-slate-800 dark:bg-slate-600 text-white rounded-lg hover:bg-slate-700 dark:hover:bg-slate-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={clearConversation}
+                className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-white/5 transition-colors font-mono"
               >
-                <Send size={20} />
+                  // RESET
               </button>
             </div>
-          </div>
-        </div>
-      )}
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950/50">
+              {messages.map((message, index) => (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  key={index}
+                  className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+                >
+                  <div className={`p-2 rounded-lg h-fit ${message.role === 'user'
+                    ? 'bg-violet-600/20 border border-violet-500/30'
+                    : 'bg-cyan-600/20 border border-cyan-500/30'
+                    }`}>
+                    {message.role === 'user' ? (
+                      <User size={16} className="text-violet-300" />
+                    ) : (
+                      <Bot size={16} className="text-cyan-300" />
+                    )}
+                  </div>
+                  <div className={`max-w-[75%] p-3 rounded-2xl backdrop-blur-sm ${message.role === 'user'
+                    ? 'bg-violet-600/10 text-slate-200 border border-violet-500/20 rounded-tr-none'
+                    : 'bg-slate-900/60 text-slate-300 border border-white/10 rounded-tl-none shadow-lg'
+                    }`}>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap font-light">
+                      {message.content}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+              {isLoading && (
+                <div className="flex gap-3">
+                  <div className="p-2 rounded-lg bg-cyan-600/20 border border-cyan-500/30 h-fit">
+                    <Bot size={16} className="text-cyan-300" />
+                  </div>
+                  <div className="bg-slate-900/60 border border-white/10 p-3 rounded-2xl rounded-tl-none">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" />
+                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-4 border-t border-white/5 bg-slate-950/80 backdrop-blur-md">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Input command or query..."
+                  className="flex-1 px-4 py-2 bg-slate-900/50 border border-white/10 rounded-xl focus:outline-none focus:border-cyan-500/50 focus:bg-slate-900/80 text-slate-200 placeholder-slate-600 transition-all font-mono text-sm"
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={isLoading || !input.trim()}
+                  className="p-2.5 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-xl hover:bg-cyan-600/30 hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send size={18} />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

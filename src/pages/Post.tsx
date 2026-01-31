@@ -17,7 +17,7 @@ export default function Post() {
         <Content />
       </article>
     );
-  } catch (err) {
+  } catch {
     return <div className="p-8">Error loading post</div>;
   }
 }

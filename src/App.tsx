@@ -1,71 +1,46 @@
 import { useState, useEffect } from 'react';
-import Hero from './components/Hero';
-import About from './components/About';
-import Experience from './components/Experience';
-import Research from './components/Research';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Achievements from './components/Achievements';
-import Contact from './components/Contact';
-import Chatbot from './components/Chatbot';
-import Navigation from './components/Navigation';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Blog from './pages/Blog';
-import Post from './pages/Post';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 
-function App() {
-  const [activeSection, setActiveSection] = useState('home');
+// Pages & Components
+import LoadingScreen from './components/UI/LoadingScreen';
+import CustomCursor from './components/UI/CustomCursor';
+import Post from './pages/Post';
+import IDELayout from './components/IDE/IDELayout';
+
+// Scroll to Top Component
+function ScrollToTop() {
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'achievements', 'contact'];
-      const scrollPosition = window.scrollY + 100;
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-    };
+  return null;
+}
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+function App() {
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-dark-900 dark:to-dark-800 min-h-screen transition-colors duration-300">
-          <Navigation activeSection={activeSection} />
+    <Router>
+      <ScrollToTop />
+      <CustomCursor />
+      <div className="bg-slate-950 min-h-screen">
+
+        <AnimatePresence>
+          {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
+        </AnimatePresence>
+
+        {!isLoading && (
           <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Hero />
-                  <About />
-                  <Experience />
-                  <Research />
-                  <Skills />
-                  <Projects />
-                  <Achievements />
-                  <Contact />
-                  <Chatbot />
-                </>
-              }
-            />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<Post />} />
+            <Route path="/post/:id" element={<Post />} />
+            <Route path="*" element={<IDELayout />} />
           </Routes>
-        </div>
-      </BrowserRouter>
-    </ThemeProvider>
+        )}
+
+      </div>
+    </Router>
   );
 }
 

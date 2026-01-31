@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>Blog</title>
+  <link>http://localhost:5173</link>
+  <description>Blog posts</description>
+  <item>
+    <title>Hello from MDX</title>
+    <link>http://localhost:5173/blog/example-post</link>
+    <pubDate>Tue, 14 Oct 2025 00:00:00 GMT</pubDate>
+    <description>An example MDX post to verify the blog setup.</description>
+  </item>
+</channel>
+</rss>
