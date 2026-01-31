@@ -9,24 +9,24 @@ export default function Contact() {
       label: 'Email',
       value: 'vninamdar03@gmail.com',
       href: 'mailto:vninamdar03@gmail.com',
-      color: 'text-blue-400',
-      bg: 'bg-blue-500/10 border-blue-500/20',
+      color: 'text-slate-300',
+      bg: 'bg-slate-500/10 border-slate-500/20',
     },
     {
       icon: Phone,
       label: 'Phone',
       value: '+91 7517277551',
       href: 'tel:+917517277551',
-      color: 'text-teal-400',
-      bg: 'bg-teal-500/10 border-teal-500/20',
+      color: 'text-slate-300',
+      bg: 'bg-slate-500/10 border-slate-500/20',
     },
     {
       icon: Linkedin,
       label: 'LinkedIn',
       value: 'Varun Inamdar',
       href: 'https://www.linkedin.com/in/varun-inamdar03/',
-      color: 'text-blue-500',
-      bg: 'bg-blue-600/10 border-blue-600/20',
+      color: 'text-blue-400', // Keep brand color slightly visible but muted
+      bg: 'bg-blue-900/10 border-blue-900/20',
     },
     {
       icon: Github,
@@ -41,8 +41,8 @@ export default function Contact() {
       label: 'Location',
       value: 'Pune, Maharashtra',
       href: null,
-      color: 'text-red-400',
-      bg: 'bg-red-500/10 border-red-500/20',
+      color: 'text-slate-400',
+      bg: 'bg-slate-500/10 border-slate-500/20',
     },
   ];
 
@@ -56,10 +56,10 @@ export default function Contact() {
           className="mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
-            <Mail className="text-violet-400" />
+            <Mail className="text-slate-400" />
             Get In Touch
           </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-violet-400 to-cyan-500 rounded-full" />
+          <div className="h-1.5 w-20 bg-slate-500 rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

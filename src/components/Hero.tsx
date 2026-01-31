@@ -41,16 +41,16 @@ export default function Hero() {
           {/* Text Content */}
           <div className="space-y-8">
             <motion.div custom={0} initial={{ opacity: 0, y: 20 }} animate={controls}>
-              <div className="inline-block px-3 py-1 mb-4 text-xs font-mono text-cyan-400 bg-cyan-950/30 border border-cyan-800 rounded-full">
-                SYSTEM_STATUS: ONLINE
+              <div className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wide text-blue-300 bg-blue-900/30 border border-blue-800 rounded-full">
+                AVAILABLE FOR WORK
               </div>
               <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-white mb-2">
                 VARUN <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400 text-glow">
+                <span className="text-blue-500">
                   INAMDAR
                 </span>
               </h1>
-              <div className="h-1 w-32 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full" />
+              <div className="h-1.5 w-32 bg-blue-600 rounded-full" />
             </motion.div>
 
             <motion.div
@@ -60,8 +60,8 @@ export default function Hero() {
               className="text-xl md:text-2xl text-slate-300 font-light leading-relaxed max-w-lg"
             >
               <p>
-                Architecting <span className="text-cyan-400 font-medium">Inteligent Systems</span> &
-                Securing <span className="text-violet-400 font-medium">Digital Frontiers</span>.
+                Architecting <span className="text-blue-400 font-medium">Intelligent Systems</span> &
+                Securing <span className="text-blue-400 font-medium">Digital Frontiers</span>.
               </p>
             </motion.div>
 
@@ -80,40 +80,35 @@ export default function Hero() {
               <button
                 onClick={handleDownloadResume}
                 disabled={isDownloading}
-                className="group relative px-8 py-4 bg-white/5 overflow-hidden rounded-xl border border-white/10 hover:border-violet-500/50 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white overflow-hidden rounded-lg shadow-lg shadow-blue-900/20 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <div className="absolute inset-0 bg-violet-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <div className="relative flex items-center gap-3">
-                  <Download size={20} className={`text-violet-400 ${isDownloading ? 'animate-bounce' : ''}`} />
-                  <span className="font-mono text-slate-200 group-hover:text-white">
-                    {isDownloading ? 'INITIALIZING_DOWNLOAD...' : 'ACCESS_RESUME_DATA'}
+                  <Download size={20} className={`${isDownloading ? 'animate-bounce' : ''}`} />
+                  <span className="font-semibold">
+                    {isDownloading ? 'Downloading...' : 'Download Resume'}
                   </span>
                 </div>
               </button>
             </motion.div>
           </div>
 
-          {/* Glitch/Tech Image */}
+          {/* Professional Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             className="relative flex justify-center lg:justify-end"
           >
             <div className="relative w-80 h-80 md:w-96 md:h-96">
-              {/* Rotating Rings */}
-              <div className="absolute inset-0 border border-violet-500/30 rounded-full animate-[spin_10s_linear_infinite]" />
-              <div className="absolute -inset-4 border border-dashed border-cyan-500/20 rounded-full animate-[spin_20s_linear_infinite_reverse]" />
-
-              {/* Glow */}
-              <div className="absolute inset-0 bg-violet-500/20 blur-3xl rounded-full" />
+              {/* Simple Clean Border */}
+              <div className="absolute inset-4 rounded-full border-4 border-blue-500/20" />
 
               {/* Image */}
-              <div className="relative h-full w-full rounded-full overflow-hidden border-2 border-white/10 glass">
+              <div className="relative h-full w-full rounded-full overflow-hidden border-4 border-slate-800 shadow-2xl">
                 <img
                   src="/unnamed.png"
                   alt="Varun Inamdar"
-                  className="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
@@ -130,7 +125,7 @@ function SocialButton({ href, icon, label }: { href: string; icon: React.ReactNo
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-3 bg-white/5 border border-white/10 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1"
+      className="p-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/50 transition-all hover:-translate-y-1"
       aria-label={label}
     >
       {icon}

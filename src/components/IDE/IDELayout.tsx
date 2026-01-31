@@ -2,7 +2,7 @@ import { useIDE } from '../../hooks/useIDE';
 import ActivityBar from './ActivityBar';
 import Sidebar from './Sidebar';
 import EditorArea from './EditorArea';
-import TerminalPanel from './TerminalPanel';
+// import TerminalPanel from './TerminalPanel';
 import StatusBar from './StatusBar';
 import { AnimatePresence } from 'framer-motion';
 
@@ -15,6 +15,7 @@ import Research from '../Research';
 import Achievements from '../Achievements';
 import Contact from '../Contact';
 import Hero from '../Hero';
+import Chatbot from '../Chatbot';
 
 export default function IDELayout() {
     const initialFiles = [
@@ -26,6 +27,7 @@ export default function IDELayout() {
         { id: 'research', name: 'Research.md', language: 'markdown', content: <Research /> },
         { id: 'achievements', name: 'Achievements.tsx', language: 'typescript', content: <Achievements /> },
         { id: 'contact', name: 'Contact.tsx', language: 'typescript', content: <Contact /> },
+        { id: 'chat', name: 'Chat.ai', language: 'ai', content: <Chatbot embedded /> },
     ];
 
     const {
@@ -33,13 +35,13 @@ export default function IDELayout() {
         openFiles,
         activeFileId,
         sidebarExpanded,
-        terminalOpen,
+        // terminalOpen,
         activeSidebarItem,
         openFile,
         closeFile,
         setActiveFile,
         toggleSidebar,
-        toggleTerminal,
+        // toggleTerminal,
         setSidebarItem
     } = useIDE(initialFiles);
 
@@ -71,10 +73,12 @@ export default function IDELayout() {
                     />
 
                     {/* Terminal Panel */}
+                    {/* Terminal Panel Removed
                     <TerminalPanel
                         isOpen={terminalOpen}
                         onToggle={toggleTerminal}
-                    />
+                    /> 
+                    */}
                 </div>
             </div>
 

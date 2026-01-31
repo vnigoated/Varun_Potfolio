@@ -14,11 +14,11 @@ const FileIcon = ({ language }: { language: string }) => {
     switch (language) {
         case 'typescript':
         case 'tsx':
-            return <FileCode size={14} className="text-cyan-400" />;
+            return <FileCode size={14} className="text-emerald-400" />;
         case 'json':
             return <FileJson size={14} className="text-yellow-400" />;
         case 'css':
-            return <FileCode size={14} className="text-blue-400" />;
+            return <FileCode size={14} className="text-teal-400" />;
         case 'html':
             return <FileCode size={14} className="text-orange-400" />;
         case 'markdown':
@@ -40,20 +40,6 @@ export default function Sidebar({ files, activeFileId, onFileClick, expanded }: 
     };
 
     if (!expanded) return null;
-
-    // Organize files roughly by "folder" (we can infer or hardcode structure)
-    const structure = {
-        'src': {
-            files: files.filter(f => f.id === 'home'), // e.g. main.tsx
-            folders: {
-                'components': files.filter(f => f.id !== 'home' && f.id !== 'contact'),
-                'pages': files.filter(f => f.id === 'contact') // Just simulating structure
-            }
-        }
-    };
-
-    // Actually, let's keep it simple for now and just list them in a structured way manually
-    // We will assume 'activeFileId' highlights the file.
 
     return (
         <div className="w-64 bg-slate-950 border-r border-white/5 flex flex-col font-mono text-sm z-10 selection:bg-slate-800">
@@ -81,7 +67,7 @@ export default function Sidebar({ files, activeFileId, onFileClick, expanded }: 
                                 onClick={() => toggleFolder('src')}
                             >
                                 {foldersOpen['src'] ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                                <Folder size={14} className="text-violet-400" />
+                                <Folder size={14} className="text-emerald-500" />
                                 <span>src</span>
                             </div>
 
@@ -94,7 +80,7 @@ export default function Sidebar({ files, activeFileId, onFileClick, expanded }: 
                                             onClick={() => toggleFolder('components')}
                                         >
                                             {foldersOpen['components'] ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                                            <Folder size={14} className="text-cyan-400" />
+                                            <Folder size={14} className="text-emerald-400" />
                                             <span>components</span>
                                         </div>
 
@@ -106,7 +92,7 @@ export default function Sidebar({ files, activeFileId, onFileClick, expanded }: 
                                                         onClick={() => onFileClick(file.id)}
                                                         className={cn(
                                                             "flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition-colors text-slate-400 hover:text-white group",
-                                                            activeFileId === file.id && "bg-cyan-500/10 text-cyan-400"
+                                                            activeFileId === file.id && "bg-emerald-500/10 text-emerald-400"
                                                         )}
                                                     >
                                                         <FileIcon language={file.language} />
@@ -124,7 +110,7 @@ export default function Sidebar({ files, activeFileId, onFileClick, expanded }: 
                                             onClick={() => onFileClick(file.id)}
                                             className={cn(
                                                 "flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition-colors text-slate-400 hover:text-white group",
-                                                activeFileId === file.id && "bg-cyan-500/10 text-cyan-400"
+                                                activeFileId === file.id && "bg-emerald-500/10 text-emerald-400"
                                             )}
                                         >
                                             <FileIcon language={file.language} />
@@ -141,11 +127,11 @@ export default function Sidebar({ files, activeFileId, onFileClick, expanded }: 
                             <span>package.json</span>
                         </div>
                         <div className="flex items-center gap-2 px-2 py-1 text-slate-500 hover:bg-white/5 rounded cursor-pointer">
-                            <FileCode size={14} className="text-blue-600" />
+                            <FileCode size={14} className="text-emerald-600" />
                             <span>tsconfig.json</span>
                         </div>
                         <div className="flex items-center gap-2 px-2 py-1 text-slate-500 hover:bg-white/5 rounded cursor-pointer">
-                            <FileCode size={14} className="text-cyan-600" />
+                            <FileCode size={14} className="text-teal-600" />
                             <span>tailwind.config.js</span>
                         </div>
 

@@ -13,17 +13,17 @@ export default function About() {
           className="mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
-            <User className="text-cyan-400" />
+            <User className="text-emerald-400" />
             About Me
           </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-cyan-400 to-violet-500 rounded-full" />
+          <div className="h-1.5 w-20 bg-emerald-500 rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Bio Section */}
           <GlassCard className="space-y-6">
             <p className="text-lg text-slate-300 leading-relaxed">
-              I'm a passionate <span className="text-cyan-400 font-medium">AI Engineer</span> and <span className="text-violet-400 font-medium">Security Analyst</span> currently pursuing my B.Tech in
+              I'm a passionate <span className="text-emerald-400 font-medium">AI Engineer</span> and <span className="text-emerald-500 font-medium">Security Analyst</span> currently pursuing my B.Tech in
               Artificial Intelligence at Vishwakarma University with a CGPA of <span className="text-white font-bold">8.7</span>. I specialize
               in developing intelligent systems that combine machine learning, web technologies,
               and cybersecurity principles.
@@ -37,10 +37,10 @@ export default function About() {
 
           {/* Stats / Education */}
           <div className="space-y-6">
-            <GlassCard delay={0.2} className="hover:border-violet-500/30">
+            <GlassCard delay={0.2} className="hover:border-emerald-500/30">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-violet-500/10 rounded-lg border border-violet-500/20">
-                  <GraduationCap className="text-violet-400" size={24} />
+                <div className="p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                  <GraduationCap className="text-emerald-400" size={24} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Education</h3>
@@ -50,19 +50,19 @@ export default function About() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center border-b border-white/5 pb-2">
                   <span className="text-slate-300">B.Tech in AI</span>
-                  <span className="text-cyan-400 font-mono font-bold">CGPA 8.7</span>
+                  <span className="text-emerald-400 font-mono font-bold">CGPA 8.7</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-white/5 pb-2">
                   <span className="text-slate-300">Hons in Cybersecurity</span>
-                  <span className="text-violet-400 font-mono font-bold">CGPA 9.0</span>
+                  <span className="text-emerald-500 font-mono font-bold">CGPA 9.0</span>
                 </div>
               </div>
             </GlassCard>
 
-            <GlassCard delay={0.4} className="hover:border-cyan-500/30">
+            <GlassCard delay={0.4} className="hover:border-green-500/30">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
-                  <Award className="text-cyan-400" size={24} />
+                <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <Award className="text-green-400" size={24} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Highlights</h3>
@@ -71,15 +71,15 @@ export default function About() {
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3 text-slate-300">
-                  <span className="text-cyan-400">•</span>
+                  <span className="text-emerald-400">•</span>
                   <span>3x Hackathon Winner (WILO & IBM)</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-300">
-                  <span className="text-cyan-400">•</span>
+                  <span className="text-emerald-400">•</span>
                   <span>IBM BI Specialization</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-300">
-                  <span className="text-cyan-400">•</span>
+                  <span className="text-emerald-400">•</span>
                   <span>Google Data Analytics Certified</span>
                 </li>
               </ul>

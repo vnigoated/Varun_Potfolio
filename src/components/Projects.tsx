@@ -15,7 +15,7 @@ export default function Projects() {
       ],
     },
     {
-      title: 'Digital and Intelligence Diet Plan RAG Agent',
+      title: 'Digital and Intelligent Diet Plan RAG Agent',
       description: 'RAG system for personalized nutrition guidance using Watsonx Studio for model orchestration.',
       technologies: ['Watsonx AI', 'Granite 8b', 'FAISS', 'LangFlow', 'Node.js', 'React'],
       highlights: [
@@ -54,19 +54,19 @@ export default function Projects() {
           className="mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
-            <Code className="text-violet-400" />
+            <Code className="text-red-500" />
             Featured Projects
           </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-violet-400 to-cyan-500 rounded-full" />
+          <div className="h-1.5 w-20 bg-red-600 rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <GlassCard key={index} className="flex flex-col group hover:border-violet-500/30" delay={index * 0.1}>
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500/0 via-violet-500/50 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <GlassCard key={index} className="flex flex-col group hover:border-red-500/30" delay={index * 0.1}>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500/0 via-red-500/50 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-white group-hover:text-violet-300 transition-colors">
+                <h3 className="text-xl font-bold text-white group-hover:text-red-300 transition-colors">
                   {project.title}
                 </h3>
                 <div className="flex gap-2">
@@ -84,11 +84,11 @@ export default function Projects() {
               </p>
 
               <div className="flex-1">
-                <p className="text-sm font-semibold text-violet-400 mb-3 uppercase tracking-wider">Key Highlights</p>
+                <p className="text-sm font-semibold text-red-400 mb-3 uppercase tracking-wider">Key Highlights</p>
                 <ul className="space-y-2 mb-6">
                   {project.highlights.map((highlight, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-sm text-slate-400">
-                      <span className="text-cyan-500 mt-0.5">›</span>
+                      <span className="text-orange-500 mt-0.5">›</span>
                       <span>{highlight}</span>
                     </li>
                   ))}
@@ -100,7 +100,7 @@ export default function Projects() {
                   {project.technologies.map((tech, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-violet-500/10 border border-violet-500/20 text-violet-200 rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-red-500/10 border border-red-500/20 text-red-200 rounded-full text-xs font-medium"
                     >
                       {tech}
                     </span>

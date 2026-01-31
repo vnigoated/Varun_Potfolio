@@ -18,13 +18,12 @@ export default function Chatbot({ embedded = false }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "SYSTEM_ONLINE: I am Varun's AI assistant. Accessing neural archives... How can I assist you with his portfolio today?",
+      content: "Hi there! I'm Varun's AI assistant. I can answer questions about his work, skills, and experience. How can I help you?",
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  // const [conversationHistory, setConversationHistory] = useState([]); // Removed Gemini history
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +89,7 @@ PROJECTS:
    – Built predictive failure detection system using anomaly detection algorithms, identifying equipment faults 48 hours in advance with 91% precision.
    – Designed centralized failure management dashboard with automated alert mechanisms, reducing maintenance downtime by 25%.
 
-2. Digital and Intelligence Diet Plan RAG Agent | Watsonx AI, Granite 8b-instruct, FAISS, LangFlow, Node.js, React
+2. Digital and Intelligent Diet Plan RAG Agent | Watsonx AI, Granite 8b-instruct, FAISS, LangFlow, Node.js, React
    – Developed a Retrieval-Augmented Generation system for personalized nutrition guidance using Watsonx Studio for model orchestration and deployment.
    – Leveraged Granite models for both embedding generation and LLM-based response synthesis, ensuring domain-specific accuracy and efficiency.
    – Integrated FAISS vector store for scalable semantic retrieval across 10K+ nutritional records, enabling context-aware and adaptive meal recommendations.
@@ -120,41 +119,69 @@ ACHIEVEMENTS:
 - Deployed AI Monitoring system at Shri Mahalaxmi Mandir, Pune during Navratri, counting 200,000+ people and boosting crowd management.
 `;
 
+  // ... context string remains the same ...
+
+  const searchContext = (query: string): string | null => {
+    const normalize = (text: string) => text.toLowerCase().replace(/[^\w\s]/g, '');
+    const queryTokens = normalize(query).split(/\s+/).filter(t => t.length > 2);
+
+    if (queryTokens.length === 0) return null;
+
+    // Split context into meaningful chunks
+    const sections = portfolioContext.split('\n\n').filter(s => s.trim().length > 10);
+
+    let bestMatch = { score: 0, content: '' };
+
+    sections.forEach(section => {
+      const normalizedSection = normalize(section);
+      let score = 0;
+
+      queryTokens.forEach(token => {
+        if (normalizedSection.includes(token)) {
+          score += 1;
+          // Boost score for exact keyword matches in headers
+          if (section.toUpperCase().includes(token.toUpperCase())) score += 2;
+        }
+      });
+
+      if (score > bestMatch.score) {
+        bestMatch = { score, content: section };
+      }
+    });
+
+    // Threshold for relevance
+    return bestMatch.score > 0 ? bestMatch.content : null;
+  };
+
   const getFallbackResponse = (userInput: string): string => {
     const input = userInput.toLowerCase().trim();
 
-    // Handle greetings
-    if (/\b(hi|hello|hey)\b/.test(input)) {
-      return "Greetings. Neural link established. I can provide analysis on Varun's experience, skills, projects, and achievements. Please state your query.";
+    // 1. Handle Greetings (Conversational)
+    if (/\b(hi|hello|hey|greetings)\b/i.test(input) && input.length < 20) {
+      return "Hello! I'm capable of answering questions about Varun's projects, experience, and skills based on his portfolio data. What would you like to know?";
     }
 
-    // Handle questions about experience
-    if (input.includes('experience') || input.includes('work') || input.includes('job')) {
-      return "Accessing Experience Module... Varun has served as an AI Engineer at Southern Command (Drone Project) and as a Security Analyst at Nimka & Beeman. He specializes in autonomous systems and web security protocols.";
+    // 2. Handle 'Who is Varun' / 'About' specifically using the Bio context
+    if (/(who is|about|tell me about) varun/i.test(input)) {
+      // Return the Bio section
+      const bio = portfolioContext.split('CONTACT:')[0].replace(/You are.*?BIO:/s, '').trim();
+      return bio;
     }
 
-    // Handle questions about skills
-    if (input.includes('skill') || input.includes('technology') || input.includes('tech')) {
-      return "Scanning Technical Capabilities... Varun is proficient in Python, Java, JavaScript, TypeScript, React.js, Node.js, TensorFlow, and OpenCV. He possesses dual specialization in AI/ML architectures and Cybersecurity tools.";
+    // 3. Smart Context Search (The "Info" part)
+    const contextMatch = searchContext(userInput);
+    if (contextMatch) {
+      // Formulate a dynamic-sounding response
+      return `Based on Varun's portfolio: \n\n${contextMatch}`;
     }
 
-    // Handle questions about projects
-    if (input.includes('project') || input.includes('work')) {
-      return "Retrieving Project Data... Notable projects include a Tender Summarizer (NLP), Cybersecurity AI Tutor, and CNN-based Diabetic Retinopathy Detection. Which specific project requires detailed analysis?";
-    }
+    // 4. Specific Fallbacks for Vague Queries
+    if (input.includes('project')) return "Varun has worked on projects like the Skoda Energy Management System, a Diet Plan RAG Agent, and Career Connect. Ask about one of them!";
+    if (input.includes('experience')) return "Varun has experience as an AI Engineer Intern and Security Analyst. He has worked with Vishwakarma University and Beeman & Nimka.";
+    if (input.includes('skill') || input.includes('tech')) return "He is skilled in Python, React, Next.js, PyTorch, and cybersecurity tools like BurpSuite.";
 
-    // Handle questions about contact
-    if (input.includes('contact') || input.includes('email') || input.includes('phone') || input.includes('reach')) {
-      return "Communication Protocols: \nEmail: vninamdar03@gmail.com \nPhone: +91 7517277551 \nLinkedIn: linkedin.com/in/varun-inamdar03/ \nGitHub: github.com/vnigoated";
-    }
-
-    // Handle questions about education
-    if (input.includes('education') || input.includes('degree') || input.includes('university') || input.includes('college')) {
-      return "Education Records: \nB.Tech in Artificial Intelligence at Vishwakarma University (CGPA 8.7) \nHonors in Cybersecurity (CGPA 9.0).";
-    }
-
-    // Default response
-    return "Query not recognized in local cache. I can detail Varun's experience, skills, projects, or contact protocols. Please refine your request.";
+    // 5. Ultimate Fallback
+    return "I found no specific records for that in the portfolio guidelines. Could you rephrase or ask about his Experience, Projects, or Skills?";
   };
 
   // Groq / OpenAI-compatible Message Interface
@@ -162,7 +189,7 @@ ACHIEVEMENTS:
     // Build system message with context
     const systemMessage: Message = {
       role: 'system',
-      content: portfolioContext + "\n\nCRITICAL INSTRUCTION: You are strictly an assistant for Varun Inamdar's portfolio. You MUST ONLY answer questions related to Varun, his skills, experience, projects, and contact info. If a user asks about general topics (like 'what is the capital of France', 'write a poem', 'coding help unrelated to Varun'), you MUST politely refuse and steer the conversation back to Varun's portfolio. Do not hallucinate information."
+      content: portfolioContext + "\n\nCRITICAL INSTRUCTION: You are Varun Inamdar's professional AI portfolio assistant. Your tone should be helpful, professional, and concise. Do NOT use sci-fi or robotic jargon (e.g., 'Neural link', 'System Online'). Answer questions directly based on the provided context. If a user asks about general topics unrelated to Varun, politely redirect them to his portfolio content."
     };
 
     // Add recent conversation history (last 10 messages)
@@ -259,7 +286,7 @@ ACHIEVEMENTS:
     setMessages([
       {
         role: 'assistant',
-        content: "SYSTEM_RESET_COMPLETE. Memory cleared. I am ready for new queries regarding Varun Inamdar.",
+        content: "Conversation history cleared. How can I help you regarding Varun's portfolio?",
         timestamp: new Date(),
       },
     ]);
@@ -277,35 +304,34 @@ ACHIEVEMENTS:
               key={index}
               className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`p-2 rounded-lg max-w-[85%] font-mono text-sm ${message.role === 'user'
-                ? 'bg-cyan-600/20 text-cyan-100 border border-cyan-500/30'
+              <div className={`p-2 rounded-lg max-w-[85%] font-sans text-sm ${message.role === 'user'
+                ? 'bg-emerald-600/20 text-emerald-100 border border-emerald-500/30'
                 : 'bg-slate-800/50 text-slate-300 border border-white/5'
                 }`}>
                 {message.role === 'assistant' && (
-                  <span className="text-xs text-green-400 block mb-1">➜ system_response</span>
+                  <span className="text-xs text-emerald-400 block mb-1">AI Assistant</span>
                 )}
                 {message.content}
               </div>
             </motion.div>
           ))}
           {isLoading && (
-            <div className="flex gap-2 text-slate-500 text-xs font-mono animate-pulse">
-              <span>PROCESSING_QUERY...</span>
+            <div className="flex gap-2 text-slate-500 text-xs font-sans animate-pulse">
+              <span>Thinking...</span>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
         <div className="p-3 bg-slate-900 border-t border-white/10 flex items-center gap-2">
-          <span className="text-green-500">➜</span>
-          <span className="text-cyan-500">~</span>
+          <span className="text-emerald-500">➜</span>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Type command..."
-            className="flex-1 bg-transparent border-none outline-none text-slate-300 font-mono text-sm placeholder:text-slate-600"
+            placeholder="Ask anything about Varun..."
+            className="flex-1 bg-transparent border-none outline-none text-slate-300 font-sans text-sm placeholder:text-slate-600"
             disabled={isLoading}
           />
         </div>
@@ -322,9 +348,9 @@ ACHIEVEMENTS:
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 p-4 bg-cyan-600/20 backdrop-blur-md border border-cyan-500/50 text-cyan-400 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:bg-cyan-600/30 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] transition-all z-50 group"
+        className="fixed bottom-6 right-6 p-4 bg-emerald-600/20 backdrop-blur-md border border-emerald-500/50 text-emerald-400 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:bg-emerald-600/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all z-50 group"
       >
-        <span className="absolute inset-0 rounded-full animate-ping bg-cyan-500/20 duration-1000 -z-10"></span>
+        <span className="absolute inset-0 rounded-full animate-ping bg-emerald-500/20 duration-1000 -z-10"></span>
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
       </motion.button>
 
@@ -338,23 +364,23 @@ ACHIEVEMENTS:
           >
             <div className="bg-slate-950/80 backdrop-blur-md p-4 flex items-center justify-between border-b border-white/5">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/30 relative">
-                  <div className="absolute inset-0 bg-cyan-400/20 blur opacity-50 animate-pulse"></div>
-                  <Sparkles size={20} className="text-cyan-400 relative z-10" />
+                <div className="p-2 bg-emerald-500/20 rounded-lg border border-emerald-500/30 relative">
+                  <div className="absolute inset-0 bg-emerald-400/20 blur opacity-50 animate-pulse"></div>
+                  <Sparkles size={20} className="text-emerald-400 relative z-10" />
                 </div>
                 <div>
                   <h3 className="font-bold text-white flex items-center gap-2">
-                    Neural Assistant
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    Portfolio Assistant
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   </h3>
-                  <p className="text-xs text-cyan-400/70 font-mono">STATUS: ACTIVE</p>
+                  <p className="text-xs text-emerald-400/70 font-sans">Online</p>
                 </div>
               </div>
               <button
                 onClick={clearConversation}
-                className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-white/5 transition-colors font-mono"
+                className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-white/5 transition-colors font-sans"
               >
-                  // RESET
+                Clear
               </button>
             </div>
 
@@ -367,20 +393,20 @@ ACHIEVEMENTS:
                   className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                 >
                   <div className={`p-2 rounded-lg h-fit ${message.role === 'user'
-                    ? 'bg-violet-600/20 border border-violet-500/30'
-                    : 'bg-cyan-600/20 border border-cyan-500/30'
+                    ? 'bg-slate-700/50 border border-slate-600/30'
+                    : 'bg-emerald-600/20 border border-emerald-500/30'
                     }`}>
                     {message.role === 'user' ? (
-                      <User size={16} className="text-violet-300" />
+                      <User size={16} className="text-slate-300" />
                     ) : (
-                      <Bot size={16} className="text-cyan-300" />
+                      <Bot size={16} className="text-emerald-300" />
                     )}
                   </div>
                   <div className={`max-w-[75%] p-3 rounded-2xl backdrop-blur-sm ${message.role === 'user'
-                    ? 'bg-violet-600/10 text-slate-200 border border-violet-500/20 rounded-tr-none'
+                    ? 'bg-slate-800 text-slate-200 border border-slate-700 rounded-tr-none'
                     : 'bg-slate-900/60 text-slate-300 border border-white/10 rounded-tl-none shadow-lg'
                     }`}>
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap font-light">
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap font-sans">
                       {message.content}
                     </p>
                   </div>
@@ -388,14 +414,14 @@ ACHIEVEMENTS:
               ))}
               {isLoading && (
                 <div className="flex gap-3">
-                  <div className="p-2 rounded-lg bg-cyan-600/20 border border-cyan-500/30 h-fit">
-                    <Bot size={16} className="text-cyan-300" />
+                  <div className="p-2 rounded-lg bg-emerald-600/20 border border-emerald-500/30 h-fit">
+                    <Bot size={16} className="text-emerald-300" />
                   </div>
                   <div className="bg-slate-900/60 border border-white/10 p-3 rounded-2xl rounded-tl-none">
                     <div className="flex gap-1">
-                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" />
-                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" />
+                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
                     </div>
                   </div>
                 </div>
@@ -410,14 +436,14 @@ ACHIEVEMENTS:
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Input command or query..."
-                  className="flex-1 px-4 py-2 bg-slate-900/50 border border-white/10 rounded-xl focus:outline-none focus:border-cyan-500/50 focus:bg-slate-900/80 text-slate-200 placeholder-slate-600 transition-all font-mono text-sm"
+                  placeholder="Ask anything..."
+                  className="flex-1 px-4 py-2 bg-slate-900/50 border border-white/10 rounded-xl focus:outline-none focus:border-emerald-500/50 focus:bg-slate-900/80 text-slate-200 placeholder-slate-600 transition-all font-sans text-sm"
                   disabled={isLoading}
                 />
                 <button
                   onClick={handleSend}
                   disabled={isLoading || !input.trim()}
-                  className="p-2.5 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-xl hover:bg-cyan-600/30 hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-xl hover:bg-emerald-600/30 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send size={18} />
                 </button>

@@ -3,34 +3,35 @@ import GlassCard from './UI/GlassCard';
 import { motion } from 'framer-motion';
 
 export default function Skills() {
+  /* Red/Crimson Theme for Skills */
   const skillCategories = [
     {
       title: 'Languages & Databases',
       icon: Code,
       skills: ['Python', 'C', 'JavaScript', 'TypeScript', 'SQL', 'PostgreSQL', 'MongoDB', 'Redis', 'FAISS', 'Pinecone'],
-      color: 'text-blue-400',
-      bg: 'bg-blue-500/10 border-blue-500/20',
+      color: 'text-red-400',
+      bg: 'bg-red-500/10 border-red-500/20',
     },
     {
       title: 'Frameworks',
       icon: Wrench,
       skills: ['React', 'Next.js', 'Node.js', 'Express', 'Flask', 'FastAPI', 'TailwindCSS'],
-      color: 'text-teal-400',
-      bg: 'bg-teal-500/10 border-teal-500/20',
+      color: 'text-rose-400',
+      bg: 'bg-rose-500/10 border-rose-500/20',
     },
     {
       title: 'AI/ML & Specializations',
       icon: Brain,
       skills: ['PyTorch', 'Scikit-learn', 'Transformers', 'OpenCV', 'LangChain', 'LangGraph', 'LlamaIndex', 'NLP', 'RAG', 'Agentic AI'],
-      color: 'text-violet-400',
-      bg: 'bg-violet-500/10 border-violet-500/20',
+      color: 'text-red-500',
+      bg: 'bg-red-600/10 border-red-600/20',
     },
     {
       title: 'Tools, DevOps & Security',
       icon: Cloud,
       skills: ['Git', 'Docker', 'AWS', 'GCP', 'Vercel', 'MLflow', 'BentoML', 'Langflow', 'Ollama', 'OWASP ZAP', 'BurpSuite'],
-      color: 'text-cyan-400',
-      bg: 'bg-cyan-500/10 border-cyan-500/20',
+      color: 'text-rose-500',
+      bg: 'bg-rose-600/10 border-rose-600/20',
     },
   ];
 
@@ -44,10 +45,10 @@ export default function Skills() {
           className="mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
-            <Brain className="text-violet-400" />
+            <Brain className="text-red-500" />
             Technical Arsenal
           </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-violet-400 to-blue-500 rounded-full" />
+          <div className="h-1.5 w-20 bg-red-500 rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -57,7 +58,7 @@ export default function Skills() {
               <GlassCard
                 key={index}
                 delay={index * 0.1}
-                className="group hover:border-white/20"
+                className="group hover:border-red-500/30"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className={`p-3 rounded-lg ${category.bg} ${category.color}`}>

@@ -51,25 +51,25 @@ export default function Experience() {
           className="mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
-            <Briefcase className="text-cyan-400" />
+            <Briefcase className="text-amber-500" />
             Experience
           </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-cyan-400 to-violet-500 rounded-full" />
+          <div className="h-1.5 w-20 bg-amber-500 rounded-full" />
         </motion.div>
 
         <div className="space-y-8 relative">
           {/* Connector Line */}
-          <div className="absolute left-8 top-8 bottom-8 w-0.5 bg-gradient-to-b from-cyan-500/50 to-violet-500/50 hidden md:block" />
+          <div className="absolute left-8 top-8 bottom-8 w-0.5 bg-gradient-to-b from-amber-500/50 to-orange-500/50 hidden md:block" />
 
           {experiences.map((exp, index) => (
             <div key={index} className="relative">
-              <div className="absolute left-8 -translate-x-1/2 top-10 w-4 h-4 rounded-full bg-slate-950 border-2 border-cyan-400 z-10 hidden md:block" />
+              <div className="absolute left-8 -translate-x-1/2 top-10 w-4 h-4 rounded-full bg-slate-950 border-2 border-amber-500 z-10 hidden md:block" />
 
-              <GlassCard className="md:ml-16 border-white/5 hover:border-cyan-500/30" delay={index * 0.2}>
+              <GlassCard className="md:ml-16 border-white/5 hover:border-amber-500/30" delay={index * 0.2}>
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-bold text-white mb-1">{exp.title}</h3>
-                    <p className="text-lg text-cyan-400 font-medium">{exp.company}</p>
+                    <p className="text-lg text-amber-500 font-medium">{exp.company}</p>
                   </div>
                   <div className="flex flex-wrap gap-4 text-sm text-slate-400">
                     <div className="flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full">
@@ -86,7 +86,7 @@ export default function Experience() {
                 <ul className="space-y-3">
                   {exp.responsibilities.map((resp, idx) => (
                     <li key={idx} className="flex items-start gap-3 text-slate-300">
-                      <span className="text-violet-400 mt-1.5">•</span>
+                      <span className="text-orange-500 mt-1.5">•</span>
                       <span className="leading-relaxed">{resp}</span>
                     </li>
                   ))}

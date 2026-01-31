@@ -30,7 +30,7 @@ export default function ActivityBar({ activeItem, onItemClick }: ActivityBarProp
                         title={item.label}
                     >
                         {activeItem === item.id && (
-                            <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-cyan-400 rounded-r-full" />
+                            <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-400 rounded-r-full" />
                         )}
                         {item.icon}
                     </button>
